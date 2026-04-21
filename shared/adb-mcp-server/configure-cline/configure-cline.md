@@ -2,7 +2,7 @@
 
 ## Introduction
 
-In the previous lab 6, you used Cline which is a Visual Studio Code extension to call database tools exposed through the MCP Server using bearer token.
+In the previous lab 5, you used Claud Desktop to call database tools exposed through the MCP Server using a bearer token.
 
 In this lab, you will learn how to set up and use Visual Studio Code with the Cline extension as an MCP client using either a bearer token or OAuth authentication:
 
@@ -21,8 +21,8 @@ In this lab, you will:
 * Install Visual Studio Code (if not already installed)
 * Install and configure the Cline extension
 * Configure authentication for the MCP Server using either:
-  * OAuth (browser-based sign-in), or
-  * a bearer token (generated using cURL)
+* OAuth (browser-based sign-in), or
+* a bearer token (generated using cURL)
 * Configure Cline to securely connect to your Autonomous AI Database MCP Server
 * Verify that Cline loads available database tools
 * Select and manage tool access through the Cline extension
@@ -123,8 +123,8 @@ To authenticate with the MCP server, you must obtain a bearer token through an H
 2. If prompted, login to your Cline account by following the prompts on the screen.
 3. Click **MCP Servers** and click the **Configure** tab to add or modify a server connection. ![Cline main window](../configure-cline/images/cline-mcpserver-configuration.png)
 
-4. Click **Configure MCP Servers**. This opens up `cline_mcp_settings.json` file in Visual Studio Code.
-5. Use the following example as a template for MCP server configuration and replace the code in `cline_mcp_setting.json`. Choose from:
+4. Click **Configure MCP Servers**. This opens the `cline_mcp_settings.json` file in Visual Studio Code.
+5. Use the following example as a template for MCP server configuration and replace the specification in `cline_mcp_setting.json`. Choose from:
 
     ## Option 5A: For Oauth authentication
 
@@ -150,7 +150,7 @@ To authenticate with the MCP server, you must obtain a bearer token through an H
     
     ![Configure Cline](../configure-cline/images/cline-configuration-oauth.png =70%x*)
 
-    ## Option 5B: For Brearer Token
+    ## Option 5B: For Bearer Token
 
     Provide your actual values in the placeholders.
 
@@ -204,7 +204,7 @@ To authenticate with the MCP server, you must obtain a bearer token through an H
 
   When prompted to open Visual Studio Code, click **Open** (or **Yes**) to return to VS Code and complete authentication.
 
-  ## Option 10B: For Brearer Token
+  ## Option 10B: For Bearer Token
 
   Confirm your `Authorization: Bearer <token>` header is present in `cline_mcp_settings.json`. If the token is expired, generate a new token and update the configuration.
 
