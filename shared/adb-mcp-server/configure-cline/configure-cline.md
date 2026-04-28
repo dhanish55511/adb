@@ -2,7 +2,7 @@
 
 ## Introduction
 
-In the previous lab 5, you used Claud Desktop to call database tools exposed through the MCP Server using a bearer token.
+In the previous lab 5, you used Claude Desktop to call database tools exposed through the MCP Server using a bearer token.
 
 In this lab, you will learn how to set up and use Visual Studio Code with the Cline extension as an MCP client using either a bearer token or OAuth authentication:
 
