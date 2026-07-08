@@ -23,9 +23,9 @@
             "filename": "../../setup-environment/setup-environment.md"
         },
         {
-            "title": "Lab 2: Lab 2 for Select AI for Python",
+            "title": "Lab 2: Create a Compute Instance",
             "type": "tenancy",
-            "filename": "../../lab-2-for-select-ai-for-python/lab-2-for-select-ai-for-python.md"
+            "filename": "../../create-compute-instance/create-compute-instance.md"
         }
     ]
 }

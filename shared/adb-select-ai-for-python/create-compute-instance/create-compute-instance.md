@@ -1,4 +1,4 @@
-# Lab 2 for Select AI for Python
+# Create a Compute Instance
 
 ## Introduction  
 
