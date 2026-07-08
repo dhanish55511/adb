@@ -1,0 +1,31 @@
+{
+    "workshoptitle": "Get Started with Select AI for Python",
+    "help": "livelabs-help-db_us@oracle.com",
+    "include": {
+        "adb-provision-body.md":"/common/building-blocks/tasks/adb/provision-body.md"
+    },
+    "variables":["./variables.json"],
+    "tutorials": [
+        {
+            "title": "Introduction",
+            "description": "Introduction to the workshop",
+            "filename": "../../introduction/introduction-mcp-server.md"
+        },
+        {
+            "title": "Get Started",
+            "description": "Get started using Oracle Cloud Infrastructure",
+            "filename": "https://oracle-livelabs.github.io/common/labs/cloud-login/cloud-login.md"
+        },
+        {
+            "title": "Lab 1: Set up Your Workshop Environment",
+            "type": "tenancy",
+            "description": "Set up an Autonomous AI Database and Install Ask Oracle app",
+            "filename": "../../setup-environment/setup-environment.md"
+        },
+        {
+            "title": "Lab 2: Lab 2 for Select AI for Python",
+            "type": "tenancy",
+            "filename": "../../lab-2-for-select-ai-for-python/lab-2-for-select-ai-for-python.md"
+        }
+    ]
+}
