@@ -426,10 +426,8 @@ If the connection succeeds, the script displays `Connected to the Database`. You
 * [Connect Python Applications to Autonomous AI Database](https://docs.oracle.com/en/cloud/paas/autonomous-database/serverless/adbsb/connecting-python.html)
 * [Select AI for Python](https://docs.oracle.com/en/cloud/paas/autonomous-database/serverless/adbsb/select-ai-py.html)
 
-Copyright (c) 2026 Oracle Corporation.
+## Acknowledgements
 
-Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.3
-or any later version published by the Free Software Foundation;
-with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
-A copy of the license is included in the section entitled [GNU Free Documentation License](https://oracle-livelabs.github.io/adb/shared/adb-15-minutes/introduction/files/gnu-free-documentation-license.txt)
+- **Created By/Date:** Chandrakanth Putha, Oracle AI Database Product Manager
+- **Contributors:** Mark Hornick, Product Management for Select AI and Machine Learning
+- **Last Updated By:** Dhanish Kumar, Senior Member of Technical Staff

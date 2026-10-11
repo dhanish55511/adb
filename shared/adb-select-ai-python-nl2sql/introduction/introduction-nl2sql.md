@@ -64,15 +64,7 @@ You may now proceed to the next lab.
 * [Examples of Using Select AI](https://docs.oracle.com/en/cloud/paas/autonomous-database/serverless/adbsb/select-ai-examples.html)
 
 ## Acknowledgements
-* **Authors:**: 
-* **Contributors:** 
-* **Last Updated By/Date:** 
 
-
-Copyright (c) 2026 Oracle Corporation.
-
-Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.3
-or any later version published by the Free Software Foundation;
-with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
-A copy of the license is included in the section entitled [GNU Free Documentation License](files/gnu-free-documentation-license.txt)
+* **Created By:** Chandrakanth Putha, Oracle AI Database Product Manager
+* **Contributors:** Mark Hornick, Product Management for Select AI and Machine Learning
+* **Last Updated By:** Dhanish Kumar, Senior Member of Technical Staff
