@@ -9,7 +9,7 @@
         {
             "title": "Introduction",
             "description": "Introduction to the workshop",
-            "filename": "../../introduction/introduction-mcp-server.md"
+            "filename": "../../introduction/introduction-nl2sql.md"
         },
         {
             "title": "Get Started",
@@ -23,9 +23,22 @@
             "filename": "../../setup-environment/setup-environment.md"
         },
         {
-            "title": "Lab 2: Create a Compute Instance",
+            "title": "Lab 2: Create Sample Data for Select AI for Python",
             "type": "tenancy",
-            "filename": "../../create-compute-instance/create-compute-instance.md"
+            "description": "Create and load sample database tables for Select AI for Python",
+            "filename": "../../create-sample-data/create-sample-data.md"
+        },
+        {
+            "title": "Lab 3: Use Select AI Actions with Python",
+            "type": "tenancy",
+            "description": "Use Select AI actions from Python to work with natural-language prompts and database results",
+            "filename": "../../use-select-ai-actions/use-select-ai-actions.md"
+        },
+        {
+            "title": "Lab 4: Generate Synthetic Data with Select AI for Python",
+            "type": "tenancy",
+            "description": "Generate and validate synthetic data, including with the asynchronous API",
+            "filename": "../../generate-synthetic-data/generate-synthetic-data.md"
         }
     ]
 }
