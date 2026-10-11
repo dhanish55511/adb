@@ -56,14 +56,12 @@ In this workshop, you will:
 
 You may now proceed to the next lab.
 
-## Learn more
+## Learn More
 
-* Links
-<!-- * [Oracle Autonomous AI Database Documentation](https://docs.oracle.com/en/cloud/paas/autonomous-data-warehouse-cloud/index.html)
-* [Oracle Autonomous AI Database MCP Server Documentation](https://docs.oracle.com/en/cloud/paas/autonomous-database/serverless/adbsb/mcp-server.html#GUID-22D738E1-BC06-47F0-9684-CD698DD8C492)
-* [Oracle Select AI Agent Documentation](https://docs.oracle.com/en/cloud/paas/autonomous-database/serverless/adbsb/select-ai-agent1.html)
-* [`DBMS_CLOUD_AI_AGENT` Package Documentation](https://docs.oracle.com/en/cloud/paas/autonomous-database/serverless/adbsb/dbms-cloud-ai-agent-package.html)
-* [Additional Autonomous AI Database Workshops](https://apexapps.oracle.com/pls/apex/dbpm/r/livelabs/livelabs-workshop-cards?p100_workshop_series=222) -->
+* [Select AI for Python](https://docs.oracle.com/en/cloud/paas/autonomous-database/serverless/adbsb/select-ai-py.html)
+* [Select AI Concepts](https://docs.oracle.com/en/cloud/paas/autonomous-database/serverless/adbsb/select-ai-concepts.html)
+* [Use AI Keyword to Enter Prompts](https://docs.oracle.com/en/cloud/paas/autonomous-database/serverless/adbsb/select-ai-keyword-prompts.html)
+* [Examples of Using Select AI](https://docs.oracle.com/en/cloud/paas/autonomous-database/serverless/adbsb/select-ai-examples.html)
 
 ## Acknowledgements
 * **Authors:**: 

@@ -636,6 +636,12 @@ You used `show_sql`, `run_sql`, `narrate`, `explain_sql`, `chat`, `summarize`, `
 
 You may now proceed to the next lab.
 
+## Learn More
+
+* [Select AI for Python](https://docs.oracle.com/en/cloud/paas/autonomous-database/serverless/adbsb/select-ai-py.html)
+* [Use AI Keyword to Enter Prompts](https://docs.oracle.com/en/cloud/paas/autonomous-database/serverless/adbsb/select-ai-keyword-prompts.html)
+* [Examples of Using Select AI](https://docs.oracle.com/en/cloud/paas/autonomous-database/serverless/adbsb/select-ai-examples.html)
+
 Copyright (c) 2026 Oracle Corporation.
 
 Permission is granted to copy, distribute and/or modify this document

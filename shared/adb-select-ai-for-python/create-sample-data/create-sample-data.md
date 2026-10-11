@@ -163,6 +163,11 @@ ORDER BY table_name;
 
 The query should report 5 customers, 5 products, 5 orders, 6 order items, and 2 returns. You may now proceed to the next lab.
 
+## Learn More
+
+* [Select AI for Python](https://docs.oracle.com/en/cloud/paas/autonomous-database/serverless/adbsb/select-ai-py.html)
+* [Examples of Using Select AI](https://docs.oracle.com/en/cloud/paas/autonomous-database/serverless/adbsb/select-ai-examples.html)
+
 Copyright (c) 2026 Oracle Corporation.
 
 Permission is granted to copy, distribute and/or modify this document
