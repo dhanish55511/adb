@@ -170,6 +170,6 @@ The query should report 5 customers, 5 products, 5 orders, 6 order items, and 2 
 
 ## Acknowledgements
 
-- **Created By/Date:** Chandrakanth Putha, Oracle AI Database Product Manager
+- **Created By:** Chandrakanth Putha, Oracle AI Database Product Manager
 - **Contributors:** Mark Hornick, Product Management for Select AI and Machine Learning
 - **Last Updated By:** Dhanish Kumar, Senior Member of Technical Staff

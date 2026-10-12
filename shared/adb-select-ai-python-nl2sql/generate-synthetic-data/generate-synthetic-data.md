@@ -579,6 +579,6 @@ You may now proceed to the next lab.
 
 ## Acknowledgements
 
-- **Created By/Date:** Chandrakanth Putha, Oracle AI Database Product Manager
+- **Created By:** Chandrakanth Putha, Oracle AI Database Product Manager
 - **Contributors:** Mark Hornick, Product Management for Select AI and Machine Learning
 - **Last Updated By:** Dhanish Kumar, Senior Member of Technical Staff
