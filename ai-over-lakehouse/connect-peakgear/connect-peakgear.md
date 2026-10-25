@@ -4,10 +4,9 @@ Estimated Time: 5 minutes
 
 ## Introduction
 
-Your LiveLabs reservation already includes a prepared database, a participant
-account, an Operations database link, and an AI profile. Start here: there is
-no participant ADMIN setup. Do not create a user, grant permissions,
-create a database link, or create an AI profile.
+PeakGear is a fictional sporting goods retailer. Your LiveLabs reservation
+already includes the database, participant account, Operations connection, and
+AI profile. Start by connecting Data Studio to that prepared environment.
 
 Use the values from **your own active reservation**, not the example values
 in the screenshots. OCI sign-in and database sign-in use different credentials.
@@ -22,8 +21,11 @@ In this lab, you will:
 ### Prerequisites
 
 * An active LiveLabs reservation with a ready environment.
-* Codex Desktop installed and signed in before starting Lab 3.
-* A Mac with Terminal for the supplied Starter Kit.
+* Codex installed and signed in before starting Lab 3, with an account that
+  can create a local task. Arrange installation and account access with the
+  event organizer before the workshop.
+* A macOS laptop with Terminal or a Windows laptop with Windows PowerShell.
+  Lab 3 provides a separate setup path for each operating system.
 
 ## Task 1: Find your reservation details
 
@@ -46,8 +48,11 @@ In this lab, you will:
 4. In **Environment Details**, use **Copy** beside **Database Name**,
     **Database User**, and **Database Password**. These identify and connect to
     your assigned database in Data Studio. Keep **AI Profile Name** and
-    **Operations Database Link** handy for later labs. Leave Reservation
-    Information open while you work.
+    **Operations Database Link** handy for later labs. For Lab 2, the same
+    panel, also called **View Login Info**, must provide **Azure Storage
+    Password**, **Databricks Client ID**, and **Databricks Client Secret**. If these
+    fields are missing or empty, ask the instructor before starting Lab 2.
+    Leave Reservation Information open while you work.
 
 ![Example LiveLabs Reservation Information showing the OCI login, Launch OCI, tenancy, region, and compartment. Use the values in your own reservation.](images/livelabs-reservation-information.png)
 

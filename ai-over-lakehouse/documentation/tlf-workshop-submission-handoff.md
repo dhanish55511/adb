@@ -77,8 +77,9 @@ The final answer ranks product categories using source-period
 digital interest and returned units, with repeatable product-level drill-down
 and explicit limitations.
 
-The workshop demonstrates Oracle AI Lakehouse as the governed decision layer
-across existing Oracle and Databricks data, with Data Studio as the primary
+PeakGear is a fictional sporting goods retailer. The workshop demonstrates
+Oracle AI Lakehouse as an AI-powered query hub across existing Oracle and
+Databricks data, with Data Studio as the primary
 user experience and Codex as the AI client.
 
 ## Catalog abstract
@@ -154,13 +155,16 @@ Participants should be comfortable with:
 * the purpose of OAuth credentials; and
 * basic use of a desktop AI assistant.
 
-Prior experience with Oracle Analytic Views, Iceberg internals, Python, uv, or
+Prior experience with Oracle Analytic Views, Iceberg internals, Python, or
 manual MCP configuration is not required.
 
 ## Participant prerequisites
 
-* A macOS laptop for the current starter-kit implementation.
-* Codex Desktop installed and signed in.
+* A macOS laptop with Terminal or a Windows laptop with Windows PowerShell
+  5.1 or later. Separate setup and maintenance scripts are included.
+* Codex installed, signed in, and able to create a local task. The event
+  organizer arranges supported client installation and account access before
+  the workshop; the reservation does not include a Codex account.
 * A modern browser.
 * Internet access.
 * An active, ready LiveLabs reservation with OCI Login Credentials, Tenancy
@@ -169,9 +173,10 @@ manual MCP configuration is not required.
 * The database-specific ADP_URL obtained by running the read-only query in
   Lab 3, Task 1 as PEAKGEAR_USER in Data Studio. The provider validates access
   before release.
-* The shared [Event lab values](../assets/event-lab-values.md). Source endpoints,
-  Azure storage password, Databricks client ID, client secret, and the prepared
-  Operations link name are printed in the workshop for copy/paste.
+* **Azure Storage Password**, **Databricks Client ID**, and **Databricks Client
+  Secret** supplied privately in **View Login Info → Environment Details**.
+  The public [Connection field reference](../assets/event-lab-values.md)
+  contains endpoints, aliases, and the mapping, not protected values.
 
 ## Environment prerequisites
 
@@ -360,11 +365,13 @@ The workshop is successful when:
 
 ## Event values and publication notes
 
-* The event owner approved publishing the shared values in
-  `assets/event-lab-values.md` for this one-off event. Participant source
-  credential/mount steps use concrete values, not private-handout placeholders.
-* The original Databricks screenshots show the approved endpoints and client
-  ID. The UI still masks password fields; copy-ready secrets are in the text.
+* Publish only public endpoints and credential aliases. Azure SAS tokens,
+  concrete Databricks client IDs, client secrets, and passwords must not appear
+  in text, SQL, screenshots, or ZIPs. The OAuth credential screenshot that
+  displayed a client ID has been withdrawn.
+* Backend release prerequisite: View Login Info must expose Azure Storage
+  Password, Databricks Client ID, and Databricks Client Secret. See
+  [provisioning.md](provisioning.md) for the field contract and validation.
 * Do not add ADMIN login details, unrelated secrets, or OCI API private keys.
 * Do not publish reservation database or OCI passwords. The Lab 1 environment
   screenshot is explicitly a password-redacted illustration; its other values
@@ -378,7 +385,9 @@ The workshop is successful when:
   provider validates that this read-only query succeeds; participants do not
   switch to ADMIN if it fails.
   Review unrelated database names, compartments, and tenant labels before
-  external publication. Retire the shared event credentials after the event.
+  external publication. Service owners must revoke/rotate previously exposed
+  credentials and audit access before reuse; removing the current values does
+  not purge Git history.
 
 ## Current content status
 
@@ -448,9 +457,9 @@ When using this document to populate TLF:
 7. Do not describe annotations as constraints or guaranteed joins.
 8. Do not claim sales, revenue, margin, return rate, or data-caching performance
    that the lab does not prove.
-9. Publish only the explicitly owner-approved shared source values; keep
-   reservation passwords, personal credentials, and unrelated secrets out of
-   public output. Label reservation screenshots as illustrative examples.
+9. Publish no source credentials, reservation passwords, personal credentials,
+   or unrelated secrets. Use the private View Login Info fields and label
+   reservation screenshots as illustrative examples.
 10. Use the files listed above as the source of truth for final links and
     current readiness.
 

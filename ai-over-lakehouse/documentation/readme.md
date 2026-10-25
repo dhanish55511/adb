@@ -3,7 +3,9 @@
 Estimated Time: 60 minutes, plus a 15-minute troubleshooting buffer.
 
 This is a five-module Oracle LiveLabs workshop package, numbered **Labs 1–5**.
-Participants begin with an already provisioned reservation, use its OCI and
+PeakGear is a fictional sporting goods retailer. Participants use AI Lakehouse
+as an AI-powered query hub across enterprise sources. They begin with an
+already provisioned reservation, use its OCI and
 database credentials to connect Data Studio, connect real Iceberg and Operations
 data, and then use Codex with Oracle Data Studio MCP. The same business question
 becomes more useful as its governed context improves. There is no participant
@@ -17,19 +19,21 @@ ADMIN setup.
 * Release checks and runtime gates: [author-review.md](author-review.md).
 * Screenshot capture and provenance: [traceability.md](traceability.md).
 * Provider-only provisioning boundary: [provisioning.md](provisioning.md).
-* Copy-ready event values: [event-lab-values.md](../assets/event-lab-values.md).
+* Connection field reference: [event-lab-values.md](../assets/event-lab-values.md).
 * Optional source-connection SQL: [scripts/01-connect-event-sources.sql](../scripts/01-connect-event-sources.sql).
+* Lab 2 Unity connection reference (not a required step): [scripts/02-unity-sql-reference.sql](../scripts/02-unity-sql-reference.sql).
 * Participant Codex package: [starter-kit](../starter-kit/).
 
 Lab 3 Task 1 provides the read-only SQL to obtain the database-specific ADP_URL
 as PEAKGEAR_USER in Data Studio. The reservation provider must validate access
 to this lookup before release; participants stop and contact the instructor if
 it fails. The lab then provides one Starter Kit download and an explicit
-Terminal sequence: download, open Terminal, extract the ZIP, prepare the project
+macOS Terminal or native Windows PowerShell sequence: download, open the local
+shell, extract the ZIP, prepare the project
 folder, run setup, answer its prompts with ADP_URL and the reservation's
 Database Password, open the project in Codex, and create a fresh task. The URL
 is obtained before running
-01-setup-peakgear-mcp.command. The ZIP README follows the same sequence. No
+the platform's 01 setup script. The ZIP README follows the same sequence. No
 separate local-event kit is required.
 
 The reservation already provides the participant user and grants, ORDS access,
@@ -43,6 +47,11 @@ the descriptions and tags for digital interactions, the product catalog, and
 operational returns. Lab 5 reuses those annotations to ask the harder business
 question, identify the governed-model gap, create or reuse and validate one Analytic View,
 and obtain the final governed answer in one module. It does not repeat enrichment.
+
+Lab 4 retains useful AI-generated descriptions and tags. Learners correct only
+inaccurate or missing business rules, rather than replacing every field with
+prescribed wording. Verification checks saved meaning, not exact tag names or
+an exact annotation-row count.
 
 Lab 3 Task 2 establishes the complete standing MCP boundary once, including
 the conditional model-building workflow: explicit SQL DDL through
@@ -104,20 +113,26 @@ the server was started from the wrong directory.
 
 ## Event values
 
-The event owner explicitly approved including the supplied shared passwords,
-Azure storage password, Databricks client ID, client secret, and endpoints in
-this one-off workshop package. Lab 2 source-credential and mount steps are ready
-for copy/paste; no private handout is required for these shared values. The
-participant database password is instead assigned per reservation and must be
-copied from LiveLabs **Environment Details**; it is not published in this package.
+Only public endpoints and credential aliases are included in this package.
+Lab 2 obtains **Azure Storage Password**, **Databricks Client ID**, and
+**Databricks Client Secret** from LiveLabs **View Login Info → Environment
+Details**. The optional SQL path has guarded placeholders; the Starter Kit
+contains the same secret-free field reference. If the private fields are not
+available, the learner must stop and ask the instructor. Backend publication
+of these fields is a release prerequisite, not something this repository can
+configure; see [provisioning.md](provisioning.md).
+
+The participant Database Password also comes only from the active reservation.
+Never publish a filled SQL worksheet, credential screenshot, or protected value.
+Previously exposed credentials must be revoked/rotated by their service owners;
+removing them from the current files does not purge public Git history.
 
 Lab 3 Task 1 obtains the actual database-specific HTTPS origin through the
 provided read-only SQL query, without an ADMIN login. The reservation provider
 must verify PEAKGEAR_USER can run it before release. Do not substitute the
 Operations database listener or localhost preview URL. ADMIN login, reservation
 passwords, personal credentials, and OCI API private keys are not part of the
-approved published values. Use the shared source credentials only for the event
-and retire them when it ends.
+public package. Use source credentials only for the assigned reservation.
 
 ## Status
 
