@@ -1,0 +1,38 @@
+{
+    "workshoptitle": "Get Started with Select AI Agent Framework Using Python",
+    "help": "livelabs-help-db_us@oracle.com",
+    "include": {
+        "adb-provision-body.md": "/common/building-blocks/tasks/adb/provision-body.md"
+    },
+    "variables": ["./variables.json"],
+    "tutorials": [
+        {
+            "title": "Introduction",
+            "description": "Introduction to the Select AI Agent Framework workshop",
+            "filename": "../../introduction/introduction.md"
+        },
+        {
+            "title": "Get Started",
+            "description": "Sign in to Oracle Cloud Infrastructure",
+            "filename": "../../get-started/get-started.md"
+        },
+        {
+            "title": "Lab 1: Set up Your Workshop Environment",
+            "type": "tenancy",
+            "description": "Provision Autonomous AI Database and configure the Python environment",
+            "filename": "../../setup-environment/setup-environment.md"
+        },
+        {
+            "title": "Lab 2: Create Sample Data for the Select AI Agent Framework",
+            "type": "tenancy",
+            "description": "Create customer and order-status tables and load sample data",
+            "filename": "../../create-sample-data/create-sample-data.md"
+        },
+        {
+            "title": "Lab 3: Build a Sales Return Agent Using the Sequential Pattern",
+            "type": "tenancy",
+            "description": "Create tools, tasks, an agent, and a sequential team for customer returns",
+            "filename": "../../build-sales-return-agent/build-sales-return-agent.md"
+        }
+    ]
+}
