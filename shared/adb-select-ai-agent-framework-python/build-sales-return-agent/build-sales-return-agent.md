@@ -12,7 +12,7 @@ The lab has two phases. First, you will create a basic Sales Return Agent that c
 
 Estimated Time: 25 minutes
 
-## Objectives
+### Objectives
 
 In this lab, you will:
 
@@ -32,7 +32,7 @@ In this lab, you will:
 
 - Write and test a PL/SQL function that composes a return-confirmation email.
 
-- Create a customemail tool that uses the function and a task with clear instructions for using the tool
+- Create a customer email tool that uses the function and a task with clear instructions for using the tool
 
 - Update the agent to call the email task and produce a ready-to-send preview.
 
@@ -56,19 +56,19 @@ export SELECT_AI_CREDENTIAL_NAME=my_oci_ai_profile_key
 export SELECT_AI_PROFILE_NAME=oci_ai_agent_profile
 export SELECT_AI_SCHEMA=ADB_USER
 
-export SELECT_AI_OCI_REGION=<supported-gen-ai-region>
-export SELECT_AI_OCI_MODEL=<oci-genai-model>
+export SELECT_AI_OCI_REGION='<supported-gen-ai-region>'
+export SELECT_AI_OCI_MODEL='<oci-genai-model>'
 export SELECT_AI_OCI_COMPARTMENT_ID='<compartment_ocid>'
 
 export OCI_CONFIG_PROFILE=DEFAULT
 </copy>
 ```
 
-For SELECT_AI_DB_CONNECT_STRING, use a service alias from the wallet tnsnames.ora file, such as:
+For `SELECT_AI_DB_CONNECT_STRING`, use a service alias from the wallet `tnsnames.ora` file, such as:
 
 ```bash
 <copy>
-export SELECT_AI_DB_CONNECT_STRING=<dbname>_low
+export SELECT_AI_DB_CONNECT_STRING='<dbname>_low'
 </copy>
 ```
 
@@ -93,9 +93,7 @@ grep "^[A-Za-z0-9_]" $SELECT_AI_WALLET_DIR/tnsnames.ora
 
 In this task, you will create a reusable helper file and verify that Python can connect to Autonomous AI Database.
 
-In this task, you will create a reusable helper file and verify that Python can connect to Autonomous AI Database.
-
-Create a file named select_ai_agent_common.py
+Create a file named `select_ai_agent_common.py`.
 
 ```python
 <copy>
@@ -142,63 +140,80 @@ def connect_to_adb():
 
 
 def load_profile():
-    profile_name = os.getenv("SELECT_AI_PROFILE_NAME", "oci_ai_profile")
+    profile_name = os.getenv("SELECT_AI_PROFILE_NAME", "oci_ai_agent_profile")
     return select_ai.Profile(profile_name=profile_name)
 </copy>
 ```
 
-Create a file named task1_agent_connect.py
+Create a file named `task1_agent_connect.py`.
 
-from select_ai_common import connect_to_adb
+```python
+<copy>
+from select_ai_agent_common import connect_to_adb
 
 connect_to_adb()
-
 print("Connected to the Database")
+</copy>
+```
 
 Run the script:
 
 ```bash
 <copy>
-python3.12 task1_connect.py
+python3.12 task1_agent_connect.py
 </copy>
 ```
 
-If the connection is successful, the script displays:
+If the connection succeeds, the script displays:
 
+```text
 Connected to the Database
+```
 
 ## Task 2: Create a Tool for Database Updates
 
-Create Update_Order_Status_Tool
+Create the `Update_Order_Status_Tool` tool.
 
-Create a new file namedtask2_agent_create_update_order_status_tool.py
+Create a file named `task2_agent_create_update_order_status_tool.py`.
 
 ```python
 <copy>
+import sys
+
 import select_ai
 from select_ai.agent import Tool
 from select_ai_agent_common import connect_to_adb
+
 TOOL_NAME = "Update_Order_Status_Tool"
+
+
 def main():
     connect_to_adb()
 
-    Tool.delete_tool(
-        tool_name=TOOL_NAME,
-        force=True,
-    )
- tool = Tool.create_pl_sql_tool(
-        tool_name=TOOL_NAME,
-        function="update_customer_order_status",
-        description="Tool for updating customer order status in the database table.",
-        instruction=(
-            "This tool updates the database to reflect a return status change. "
-            "Always confirm the customer name and order number with the user "
-            "before updating the status."
-        ),
-        replace=True,
-    )
-print(f"Created tool: {tool.tool_name}")
-    select_ai.disconnect()
+    try:
+        Tool.delete_tool(
+            tool_name=TOOL_NAME,
+            force=True,
+        )
+        tool = Tool.create_pl_sql_tool(
+            tool_name=TOOL_NAME,
+            function="update_customer_order_status",
+            description="Updates a customer's order status in the database.",
+            instruction=(
+                "Update the order status only after confirming the customer's "
+                "name and order number with them."
+            ),
+            replace=True,
+        )
+        print(f"Created tool: {tool.tool_name}")
+    except Exception as error:
+        print("Failed to create the order-status tool.")
+        print(error)
+        sys.exit(1)
+    finally:
+        select_ai.disconnect()
+
+
 if __name__ == "__main__":
     main()
 </copy>
@@ -214,35 +229,50 @@ python3.12 task2_agent_create_update_order_status_tool.py
 
 Expected output:
 
+```text
 Created tool: Update_Order_Status_Tool
+```
 
 Verify the Update_Order_Status_Tool
 
-use Tool.list() to verify that Update_Order_Status_Tool was created.
+Use `Tool.list()` to verify that `Update_Order_Status_Tool` was created.
 
-Create a new file name task2_agent_verify_update_order_status_tool.py
+
+Create a file named `task2_agent_verify_update_order_status_tool.py`.
 
 ```python
 <copy>
+import sys
+
 import select_ai
 from select_ai.agent import Tool
 from select_ai_agent_common import connect_to_adb
+
 TOOL_NAME = "Update_Order_Status_Tool"
+
+
 def main():
     connect_to_adb()
 
-    found = False
+    try:
+        found = False
 
-    for tool in Tool.list(tool_name_pattern=TOOL_NAME):
-        found = True
-        print(f"Tool Name: {tool.tool_name}")
-        print(f"Description: {tool.description}")
-        print(f"Attributes: {tool.attributes}")
+        for tool in Tool.list(tool_name_pattern=TOOL_NAME):
+            found = True
+            print(f"Tool Name: {tool.tool_name}")
+            print(f"Description: {tool.description}")
+            print(f"Attributes: {tool.attributes}")
 
-    if not found:
-        print(f"Tool not found: {TOOL_NAME}")
+        if not found:
+            print(f"Tool not found: {TOOL_NAME}")
+    except Exception as error:
+        print("Failed to verify the order-status tool.")
+        print(error)
+        sys.exit(1)
+    finally:
+        select_ai.disconnect()
 
-    select_ai.disconnect()
+
 if __name__ == "__main__":
     main()
 </copy>
@@ -258,21 +288,21 @@ python3.12 task2_agent_verify_update_order_status_tool.py
 
 Expected output:
 
+```text
 Tool Name: UPDATE_ORDER_STATUS_TOOL
+Description: Updates a customer's order status in the database.
+Attributes: ToolAttributes(instruction='Update the order status only after confirming the customer's name and order number with them.', function='update_customer_order_status', ...)
+```
 
-Description: Tool for updating customer order status in the database table.
+## Task 3: Create a Customer Order Status Update Function
 
-Attributes: ToolAttributes(instruction='This tool updates the database to reflect a return status change. Always confirm the customer name and order number with the user before updating the status.', function='update_customer_order_status', tool_params=ToolParams(_REQUIRED_FIELDS=None, credential_name=None, endpoint=None, notification_type=None, profile_name=None, recipient=None, sender=None, channel=None, smtp_host=None, subject=None), tool_inputs=None, tool_type=None)
+You will create a SQL function to update a customer's order status and return a message. Then run a PL/SQL block to set David Johnson's order 3928 to `pending_return`, display the result, and verify the table.
 
-## Task 3: Create a Customer Order Update Status Function
+Log in to Oracle Autonomous AI Database as `ADB_USER`, then run the following SQL statements.
 
-You will create a SQL function to update a customer’s order status and return a message, run an PL/SQL block to set a customers order to pending_return and print the result, then verify the table.
+Create a customer order status update function.
 
-Log in to Oracle Autonomous AI Database as ADB_USER, then run the following SQL statements.
-
-Create a customer order update status function.
-
-```python
+```sql
 <copy>
 CREATE OR REPLACE FUNCTION update_customer_order_status (
     p_customer_name IN VARCHAR2,
@@ -282,12 +312,12 @@ CREATE OR REPLACE FUNCTION update_customer_order_status (
     v_customer_id  customers.customer_id%TYPE;
     v_row_count    NUMBER;
 BEGIN
-    -- Find customer_id from customer_name
+    -- Find customer_id from customer_name.
     SELECT customer_id
     INTO v_customer_id
     FROM customers
     WHERE name = p_customer_name;
-    
+
     UPDATE customer_order_status
     SET status = p_status
     WHERE customer_id = v_customer_id
@@ -304,10 +334,11 @@ EXCEPTION
     WHEN OTHERS THEN
         RETURN 'Error: ' || SQLERRM;
 END;
+/
 </copy>
 ```
 
-Test this function by updating an order for a specific customer and return a message on completion
+Test this function by updating an order and displaying the result.
 
 ```sql
 <copy>
@@ -318,14 +349,23 @@ BEGIN
 
   DBMS_OUTPUT.PUT_LINE(v_result);
 END;
+/
 </copy>
+```
+
+Expected output:
+
+```text
+Update successful.
 ```
 
 Verify the change by viewing the customer order update status table for that customer.
 
 ```sql
 <copy>
-select * from customer_order_statuswhere ORDER_NUMBER = 3928;
+SELECT *
+FROM customer_order_status
+WHERE order_number = '3928';
 </copy>
 ```
 
@@ -333,9 +373,9 @@ select * from customer_order_statuswhere ORDER_NUMBER = 3928;
 
 We use a task to specify the instructions for performing actions using tools. You'll define a task that your Select AI agent will perform. Each task has a unique name and a set of attributes that specify its behaviour when planning and performing the task. In this scenario, you'll describe the interaction with the customer and how to respond in various cases.
 
-Create Handle_Product_Return_Task
+Create the `Handle_Product_Return_Task` task.
 
-Create a new file name task4_agent_create_product_return_task.py
+Create a file named `task4_agent_create_product_return_task.py`.
 
 ```python
 <copy>
@@ -364,29 +404,29 @@ def main():
                 instruction="""
 Process a product return request from a customer: {query}
 
-1. Ask the customer for the reason for the return:
-   no longer needed, arrived too late, box broken, or defective.
+1. Ask why the customer wants to return the product: no longer needed,
+   arrived too late, box broken, or defective. Ask whether they want a
+   refund or replacement when the reason requires a choice.
 
-2. If no longer needed:
-   a. Inform the customer to ship the product back at their expense.
-   b. Update the order status to return_shipment_pending using
-      Update_Order_Status_Tool.
+2. Before changing an order, collect and confirm the customer's name and
+   order number. Do not claim an update succeeded unless the tool reports
+   success.
 
-3. If the product arrived too late:
-   a. Ask the customer whether they want a refund.
-   b. If the customer wants a refund, confirm that the refund is
-      processed and update the order status to refund_completed.
+3. If the product is no longer needed, tell the customer to return it at
+   their expense and set its status to return_shipment_pending.
 
-4. If the product was defective or the box was broken:
-   a. Ask the customer whether they want a replacement or a refund.
-   b. For a replacement, inform the customer that the replacement is
-      on its way and that they will receive a return shipping label.
-      Update the order status to replaced.
-   c. For a refund, instruct the customer to print the return shipping
-      label, return the product, and update the order status to refund.
+4. If the product arrived too late and the customer wants a refund, set
+   its status to refund_completed.
 
-5. After completing a return, replacement, or refund, ask whether the
-   customer needs any further help. End the task if they do not.
+5. If the product is defective or the box was broken, ask whether the
+   customer wants a replacement or refund. For a replacement, set the
+   status to replaced. After the tool confirms success, explain that the
+   replacement will be sent and a return shipping label will follow. For a
+   refund, set the status to refund; after success, explain how to use the
+   return label.
+
+6. After the tool confirms the update, share the result and ask whether
+   the customer needs any further help. End the task if they do not.
 """,
                 tools=[TOOL_NAME],
                 enable_human_tool=True,
@@ -420,9 +460,7 @@ python3.12 task4_agent_create_product_return_task.py
 Expected output:
 
 ```text
-<copy>
 Created task: Handle_Product_Return_Task
-</copy>
 ```
 
 ## Task 5: Create OCI Credentials
@@ -431,7 +469,7 @@ In this task, you will create an AI provider credential in the database. This cr
 
 This example uses OCI Generative AI and reads the OCI user, tenancy, fingerprint, and private key from the OCI config file.
 
-Create a file named task5_agent_create_credential.py
+Create a file named `task5_agent_create_credential.py`.
 
 ```python
 <copy>
@@ -441,44 +479,47 @@ import sys
 import oci
 import select_ai
 
-from select_ai_common import connect_to_adb
+from select_ai_agent_common import connect_to_adb
 
 
-connect_to_adb()
-
-credential_name = os.getenv(
-    "SELECT_AI_CREDENTIAL_NAME",
-    "my_oci_ai_profile_key"
-)
-
-oci_config_profile = os.getenv("OCI_CONFIG_PROFILE", "DEFAULT")
-
-try:
-    default_config = oci.config.from_file(profile_name=oci_config_profile)
-    oci.config.validate_config(default_config)
-
-    with open(default_config["key_file"], "r") as key_file:
-        private_key_contents = key_file.read()
-
-    credential = {
-        "credential_name": credential_name,
-        "user_ocid": default_config["user"],
-        "tenancy_ocid": default_config["tenancy"],
-        "private_key": private_key_contents,
-        "fingerprint": default_config["fingerprint"],
-    }
-
-    select_ai.create_credential(
-        credential=credential,
-        replace=True
+def main():
+    connect_to_adb()
+    credential_name = os.getenv(
+        "SELECT_AI_CREDENTIAL_NAME",
+        "my_oci_ai_profile_key",
     )
+    oci_config_profile = os.getenv("OCI_CONFIG_PROFILE", "DEFAULT")
 
-    print(f"Created credential: {credential_name}")
+    try:
+        default_config = oci.config.from_file(profile_name=oci_config_profile)
+        oci.config.validate_config(default_config)
 
-except Exception as error:
-    print("Failed to create credential.")
-    print(error)
-    sys.exit(1)
+        with open(default_config["key_file"], "r", encoding="utf-8") as key_file:
+            private_key_contents = key_file.read()
+
+        credential = {
+            "credential_name": credential_name,
+            "user_ocid": default_config["user"],
+            "tenancy_ocid": default_config["tenancy"],
+            "private_key": private_key_contents,
+            "fingerprint": default_config["fingerprint"],
+        }
+
+        select_ai.create_credential(
+            credential=credential,
+            replace=True,
+        )
+        print(f"Created credential: {credential_name}")
+    except Exception as error:
+        print("Failed to create credential.")
+        print(error)
+        sys.exit(1)
+    finally:
+        select_ai.disconnect()
+
+
+if __name__ == "__main__":
+    main()
 </copy>
 ```
 
@@ -492,13 +533,15 @@ python3.12 task5_agent_create_credential.py
 
 Expected output:
 
+```text
 Created credential: my_oci_ai_profile_key
+```
 
 ## Task 6: Create a Select AI Profile
 
-You'll create an AI profile with LLM of your choice, to use in the next step to create an agent. In this task, you are using xAi's GROK 4.20 Multi Agent model with the OCI Gen AI credential.
+Create an AI profile with an OCI Generative AI model that is available in your selected region. Set `SELECT_AI_OCI_MODEL` to the model identifier you want to use.
 
-Create a new file named task6_agent_create_ai_profile.py
+Create a file named `task6_agent_create_ai_profile.py`.
 
 ```python
 <copy>
@@ -512,15 +555,12 @@ from select_ai_agent_common import connect_to_adb, required_env
 
 connect_to_adb()
 
-profile_name = os.getenv("SELECT_AI_PROFILE_NAME", " oci_ai_agent_profile")
-credential_name = os.getenv("SELECT_AI_CREDENTIAL_NAME", " my_oci_ai_profile_key")
+profile_name = os.getenv("SELECT_AI_PROFILE_NAME", "oci_ai_agent_profile")
+credential_name = os.getenv("SELECT_AI_CREDENTIAL_NAME", "my_oci_ai_profile_key")
 
 region = required_env("SELECT_AI_OCI_REGION")
-model = os.getenv(
-    "SELECT_AI_OCI_MODEL",
-    "xai.grok-4.20-reasoning",
-)
-compartment_id = os.getenv("SELECT_AI_OCI_COMPARTMENT_ID")
+model = required_env("SELECT_AI_OCI_MODEL")
+compartment_id = required_env("SELECT_AI_OCI_COMPARTMENT_ID")
 
 try:
     provider_args = {
@@ -529,8 +569,7 @@ try:
         "model": model,
     }
 
-    if compartment_id:
-        provider_args["oci_compartment_id"] = compartment_id
+    provider_args["oci_compartment_id"] = compartment_id
 
     provider = select_ai.OCIGenAIProvider(**provider_args)
 
@@ -570,15 +609,17 @@ python3.12 task6_agent_create_ai_profile.py
 
 Expected output:
 
+```text
 Created agent AI profile: oci_ai_agent_profile
+```
 
 ## Task 7: Define Customer Agent
 
 You'll create an agent, which specifies the LLM to use through an AI profile and the role the agent plays.
 
-Create the Customer_Return_Agent.
+Create the `Customer_Return_Agent` agent.
 
-Create a new file named task7_agent_create_customer_return_agent.py
+Create a file named `task7_agent_create_customer_return_agent.py`.
 
 ```python
 <copy>
@@ -638,21 +679,23 @@ Run the script:
 
 ```bash
 <copy>
-python3.12 task7__agent_create_customer_return_agent.py
+python3.12 task7_agent_create_customer_return_agent.py
 </copy>
 ```
 
 Expected output:
 
+```text
 Created agent: Customer_Return_Agent
+```
 
 ## Task 8: Create the Agent Team
 
 You'll define an agent team that uses the agent and tasks specified above. You specify agent-task pairs for defining a sequential workflow. If you have multiple agents or multiple tasks, these are specified within the JSON list. The same Agent can be specified multiple times with their associated tasks. In this scenario it is a single agent and task pair.
 
-Create the Return_Agency_Team.
+Create the `Return_Agency_Team` team.
 
-Create a new file named task8_agent_create_return_agency_team.py
+Create a file named `task8_agent_create_return_agency_team.py`.
 
 ```python
 <copy>
@@ -719,13 +762,17 @@ python3.12 task8_agent_create_return_agency_team.py
 
 Expected output:
 
+```text
 Created team: Return_Agency_Team
+```
 
 ## Task 9: Interact with the Return Agency Agent
 
 In this task, you will run the Return Agency Team and submit a customer return request. The agent uses the Sales Return Agent workflow to interact with the customer, collect the required return details, and update the order status when appropriate.
 
-Create a new file name task9_agent_interact_with_return_agency.py
+Agent responses can vary. The examples below show the conversation flow.
+
+Create a file named `task9_agent_interact_with_return_agency.py`.
 
 ```python
 <copy>
@@ -754,11 +801,15 @@ def main():
         conversation_id = conversation.create()
 
         print(f"Created conversation ID: {conversation_id}")
+        print(
+            "Set this ID before continuing the conversation:\n"
+            f"export SELECT_AI_CONVERSATION_ID={conversation_id}"
+        )
 
         team = Team.fetch(TEAM_NAME)
 
         response = team.run(
-            prompt="I want to return a smartphone protective case.",
+            prompt="I want to return a smartphone charging cord.",
             params={
                 "conversation_id": conversation_id,
             },
@@ -787,17 +838,20 @@ python3.12 task9_agent_interact_with_return_agency.py
 </copy>
 ```
 
-Expected output:
+Example output:
 
-Created conversation ID: 5AF6DB61-BEA3-2BB0-E063-4BD5000A4BC6
+```text
+Created conversation ID: <conversation_id>
+Set this ID before continuing the conversation:
+export SELECT_AI_CONVERSATION_ID=<conversation_id>
 
 Agent Response:
 
-Thank you for contacting us. To process your return for the smartphone protective case, could you please tell me the reason? The options are: no longer needed, arrived too late, box broken, or defective.
-
+Thank you for contacting us. To process your return for the smartphone charging cord, could you please tell me the reason? The options are: no longer needed, arrived too late, box broken, or defective.
+```
 Use the same conversation ID created in Task 9.
 
-Create a new file named task9_agent_continue_return_conversation.py
+Create a file named `task9_agent_continue_return_conversation.py`.
 
 ```python
 <copy>
@@ -844,7 +898,7 @@ Set the conversation ID returned by the previous task as an environment variable
 
 ```bash
 <copy>
-export SELECT_AI_CONVERSATION_ID=<conversation_id>
+export SELECT_AI_CONVERSATION_ID='your_conversation_id'
 </copy>
 ```
 
@@ -854,13 +908,15 @@ python3.12 task9_agent_continue_return_conversation.py
 </copy>
 ```
 
-Expected output:
+Example agent response:
 
+```text
 Agent Response:
 
 Thank you for informing us. Since the item is defective, would you like a replacement or a refund?
+```
 
-Create a new file named task9_agent_request_replacement.py
+Create a file named `task9_agent_request_replacement.py`.
 
 ```python
 <copy>
@@ -906,7 +962,7 @@ Ensure the conversation ID is set from the earlier return request:
 
 ```bash
 <copy>
-export SELECT_AI_CONVERSATION_ID=<conversation_id>
+export SELECT_AI_CONVERSATION_ID='your_conversation_id'
 </copy>
 ```
 
@@ -916,13 +972,15 @@ python3.12 task9_agent_request_replacement.py
 </copy>
 ```
 
-Expected output:
+Example agent response:
 
+```text
 Agent Response:
 
 Great, we'll send a replacement on its way, and you will receive a return shipping label shortly. To update the order status, could you please provide your customer name and order number?
+```
 
-Create a new file named task9_agent_provide_customer_order_details.py
+Create a file named `task9_agent_provide_customer_order_details.py`.
 
 ```python
 <copy>
@@ -968,7 +1026,7 @@ Ensure the conversation ID is set from the earlier return request:
 
 ```bash
 <copy>
-export SELECT_AI_CONVERSATION_ID=<conversation_id>
+export SELECT_AI_CONVERSATION_ID='your_conversation_id'
 </copy>
 ```
 
@@ -978,13 +1036,15 @@ python3.12 task9_agent_provide_customer_order_details.py
 </copy>
 ```
 
-Expected Output:
+Example agent response:
 
+```text
 Agent Response:
 
 Your replacement for order 7820 is on its way, and you will receive a return shipping label shortly. The order status has been updated to replaced. Do you need any further help?
+```
 
-Create a file named task9_agent_end_return_conversation.py
+Create a file named `task9_agent_end_return_conversation.py`.
 
 ```python
 <copy>
@@ -1029,7 +1089,7 @@ Ensure the conversation ID is set from the earlier return request:
 
 ```bash
 <copy>
-export SELECT_AI_CONVERSATION_ID=<conversation_id>
+export SELECT_AI_CONVERSATION_ID='your_conversation_id'
 </copy>
 ```
 
@@ -1039,19 +1099,21 @@ python3.12 task9_agent_end_return_conversation.py
 </copy>
 ```
 
-Expected output:
+Example agent response:
 
+```text
 Agent Response:
 
 Thank you for your feedback. Your order #7820 has been updated to 'replaced'. If you need anything else in the future, feel free to reach out. Have a great day!
+```
 
 ## Task 10: Create a Function to Generate an Email
 
-You'll create a function to return a confirmation email as a CLOB and test the output.
+You'll create a function that returns a JSON email preview in a CLOB, then test the output.
 
-Create the build_return_email function.
+Create the `build_return_email` function.
 
-Log in to Oracle Autonomous AI Database as ADB_USER, then run the following SQL statements.
+Log in to Oracle Autonomous AI Database as `ADB_USER`, then run the following SQL statements.
 
 ```sql
 <copy>
@@ -1111,39 +1173,43 @@ END;
 </copy>
 ```
 
-Test the build_return_email function and verify the output.
+Test the `build_return_email` function and verify the output.
 
 ```sql
 <copy>
 DECLARE
-        v_json CLOB;
-    BEGIN
-        v_json := build_return_email(
-            p_order_number      => '1234',
-            p_item_name         => 'smartphone charging cord',
-            p_customer_name     => 'Alice Thompson',
-            p_reason_for_return => 'Item not compatible with my phone',
-            p_email_type        => 'replacement'
-        );
+    v_json CLOB;
+BEGIN
+    v_json := build_return_email(
+        p_order_number      => '1234',
+        p_item_name         => 'smartphone charging cord',
+        p_customer_name     => 'Alice Thompson',
+        p_reason_for_return => 'Item not compatible with my phone',
+        p_email_type        => 'replacement'
+    );
 
-        DBMS_OUTPUT.PUT_LINE(v_json);
-    END;
-Result:
-{"subject":"Your Return Request for Order 1234 - smartphone charging cord","body":"Dear Alice Thompson,\n\nThank you for contacting us regarding your return request!\n\nThis email confirms that we have received your request to return the following item from order number 1234:\n\nItem: smartphone charging cord\nReason for Return: Item not compatible with my phone\n\nYour replacement for the smartphone charging cord will be shipped within 3-5 business days. You will receive a separate email with tracking information once your replacement has shipped.\n\nPlease let me know if you have any questions or if there is anything else I can assist you with.\n\nThank you, and have a great day!\n"}
-PL/SQL procedure successfully completed.
-Elapsed: 00:00:00.023
+    DBMS_OUTPUT.PUT_LINE(v_json);
+END;
+/
 </copy>
 ```
 
-NOTE: The result is provided in JSON format and the result string includes \n for returns. Your application code can extract the subject and body and send using an email tool. Using the email tool is left as an unscripted exercise.
+Example output:
+
+```text
+{"subject":"Your Return Request for Order 1234 - smartphone charging cord","body":"Dear Alice Thompson,\n\nThank you for contacting us regarding your return request!\n\nThis email confirms that we have received your request to return the following item from order number 1234:\n\nItem: smartphone charging cord\nReason for Return: Item not compatible with my phone\n\nYour replacement for the smartphone charging cord will be shipped within 3-5 business days. You will receive a separate email with tracking information once your replacement has shipped.\n\nPlease let me know if you have any questions or if there is anything else I can assist you with.\n\nThank you, and have a great day!\n"}
+PL/SQL procedure successfully completed.
+```
+
+> Note: The result is provided in JSON format and the result string includes \n for returns. Your application code can extract the subject and body and send using an email tool. Using the email tool is left as an unscripted exercise.
 
 ## Task 11: Create an Email Tool
 
 You’ll create an email tool with clear instructions on what the tool should do.
 
-Create a build_email_tool that specifies the build_return_email function.
+Create `build_email_tool` to call `build_return_email`.
 
-Create a new file named task11_agent_create_build_email_tool.py
+Create a file named `task11_agent_create_build_email_tool.py`.
 
 ```python
 <copy>
@@ -1175,10 +1241,26 @@ def main():
                 function="build_return_email",
                 tool_inputs=[
                     {
+                        "name": "p_order_number",
+                        "description": "Customer order number.",
+                    },
+                    {
+                        "name": "p_item_name",
+                        "description": "Product name from the order.",
+                    },
+                    {
+                        "name": "p_customer_name",
+                        "description": "Customer's name.",
+                    },
+                    {
+                        "name": "p_reason_for_return",
+                        "description": "Confirmed reason for the return.",
+                    },
+                    {
                         "name": "p_email_type",
                         "description": (
-                            "Only supported values are 'refund' and "
-                            "'replacement'."
+                            "Use 'refund' or 'replacement' to select the email "
+                            "content."
                         ),
                     }
                 ],
@@ -1214,13 +1296,15 @@ python3.12 task11_agent_create_build_email_tool.py
 
 Expected output:
 
+```text
 Created tool: build_email_tool
+```
 
 ## Task 12: Update the Handle Product Return Task
 
-You'll update the Handle_Product_Return_Task with a section to use the build_email_tool. The task gathers fields from the attributes, calls the tool, and returns the email text to review.
+You'll update `Handle_Product_Return_Task` to use `build_email_tool`. The task collects the email details, calls the tool, and displays the returned email for the customer to review.
 
-Create a new file named task12_agent_update_product_return_task.py
+Create a file named `task12_agent_update_product_return_task.py`.
 
 ```python
 <copy>
@@ -1250,33 +1334,36 @@ def main():
                 instruction="""
 Process a product return request from a customer: {query}
 
-1. Ask the customer for the reason for the return:
-   no longer needed, arrived too late, box broken, or defective.
+1. Ask why the customer wants to return the product: no longer needed,
+   arrived too late, box broken, or defective. Ask whether they want a
+   refund or replacement when the reason requires a choice.
 
-2. If no longer needed:
-   a. Inform the customer to ship the product back at their expense.
-   b. Update the order status to return_shipment_pending using
-      Update_Order_Status_Tool.
+2. Before changing an order, collect and confirm the customer's name and
+   order number. Do not claim an update succeeded unless the tool reports
+   success.
 
-3. If the product arrived too late:
-   a. Ask the customer whether they want a refund.
-   b. If the customer wants a refund, confirm that the refund is
-      processed and update the order status to refund_completed.
+3. If the product is no longer needed, tell the customer to return it at
+   their expense and set its status to return_shipment_pending.
 
-4. If the product was defective or the box was broken:
-   a. Ask the customer whether they want a replacement or a refund.
-   b. For a replacement, inform the customer that the replacement is
-      on its way and that they will receive a return shipping label.
-      Update the order status to replaced.
-   c. For a refund, instruct the customer to print the return shipping
-      label, return the product, and update the order status to refund.
+4. If the product arrived too late and the customer wants a refund, set
+   its status to refund_completed.
 
-5. Use build_email_tool to generate a confirmation email for a refund
-   or replacement request. Display the email to the customer and ask
-   them to confirm that the information is correct.
+5. If the product is defective or the box was broken, ask whether the
+   customer wants a replacement or refund. For a replacement, set the
+   status to replaced. After the tool confirms success, explain that the
+   replacement will be sent and a return shipping label will follow. For a
+   refund, set the status to refund; after success, explain how to use the
+   return label.
 
-6. After completing a return, replacement, or refund, ask whether the
-   customer needs any further help. Say a friendly goodbye if they do not.
+6. After the status tool confirms an update, ask for any missing email
+   details: the customer's name, order number, product name, and confirmed
+   return reason. Use `build_email_tool` with those details and email type
+   `refund` or `replacement`. Display the returned subject and body, and
+   ask the customer to confirm that they are correct. Do not claim that an
+   email was sent; this tool only generates a preview.
+
+7. Ask whether the customer needs any further help. Say a friendly goodbye
+   if they do not.
 """,
                 tools=[
                     UPDATE_ORDER_STATUS_TOOL,
@@ -1300,6 +1387,8 @@ Process a product return request from a customer: {query}
 
     finally:
         select_ai.disconnect()
+
+
 if __name__ == "__main__":
     main()
 </copy>
@@ -1315,13 +1404,15 @@ python3.12 task12_agent_update_product_return_task.py
 
 Expected output:
 
+```text
 Updated task: Handle_Product_Return_Task
+```
 
 ## Task 13: Update the Agent Team
 
 Add the new task into your agent team, which now includes the email generation tool as part of the Handle_Product_Return_Task.
 
-Create a new file named task13_agent_recreate_return_agency_team.py
+Create a file named `task13_agent_recreate_return_agency_team.py`.
 
 ```python
 <copy>
@@ -1387,11 +1478,15 @@ python3.12 task13_agent_recreate_return_agency_team.py
 
 Expected output:
 
+```text
 Created team: Return_Agency_Team
+```
 
 ## Task 14: Interact with the Agent
 
-Create a new file named task14_agent_run_return_agency_team.py to start a new Return Agency Team conversation
+Agent responses can vary. The examples below show the conversation flow.
+
+Create a file named `task14_agent_run_return_agency_team.py` to start a new Return Agency Team conversation.
 
 ```python
 <copy>
@@ -1427,7 +1522,7 @@ def main():
         team = Team.fetch(TEAM_NAME)
 
         response = team.run(
-            prompt="I want to return a smartphone protective case.",
+            prompt="I want to return smartphone backup storage.",
             params={
                 "conversation_id": conversation_id,
             },
@@ -1456,23 +1551,26 @@ python3.12 task14_agent_run_return_agency_team.py
 </copy>
 ```
 
-Expected output:
+Example output:
 
-Created conversation ID: 5AF7E98D-1FFE-025F-E063-4BD5000A2B70
-
+```text
+Created conversation ID: <conversation_id>
 Save it for follow-up prompts:
+export SELECT_AI_CONVERSATION_ID=<conversation_id>
+Agent Response:
+
+What is the reason for your return of the smartphone backup storage? The options are: no longer needed, arrived too late, box broken, or defective.
+```
+
+Set the conversation ID printed above before running the follow-up scripts:
 
 ```bash
 <copy>
-export SELECT_AI_CONVERSATION_ID=5AF7E98D-1FFE-025F-E063-4BD5000A2B70
+export SELECT_AI_CONVERSATION_ID='your_conversation_id'
 </copy>
 ```
 
-Agent Response:
-
-What is the reason for your return of the smartphone protective case? The options are: no longer needed, arrived too late, box broken, or defective.
-
-Create a new file named task14_agent_reason_arrived_too_late.py
+Create a file named `task14_agent_reason_arrived_too_late.py`.
 
 ```python
 <copy>
@@ -1509,16 +1607,33 @@ def main():
         select_ai.disconnect()
 if __name__ == "__main__":
     main()
-Run the script:
-export SELECT_AI_CONVERSATION_ID=<conversation_id>
-python3.12 task14_agent_reason_arrived_too_late.py
-Expected output:
-Agent Response:
-Would you like a refund since the product arrived too late?
 </copy>
 ```
 
-Create a new file named task14_agent_confirm_refund.py
+Run the script:
+
+```bash
+<copy>
+python3.12 task14_agent_reason_arrived_too_late.py
+</copy>
+```
+
+Example agent response:
+
+```text
+Agent Response:
+Would you like a refund since the product arrived too late?
+```
+
+Set the conversation ID printed in Task 14 before running the next script:
+
+```bash
+<copy>
+export SELECT_AI_CONVERSATION_ID='your_conversation_id'
+</copy>
+```
+
+Create a file named `task14_agent_confirm_refund.py`.
 
 ```python
 <copy>
@@ -1561,7 +1676,7 @@ Run the script:
 
 ```bash
 <copy>
-export SELECT_AI_CONVERSATION_ID=<conversation_id>
+export SELECT_AI_CONVERSATION_ID='your_conversation_id'
 </copy>
 ```
 
@@ -1571,13 +1686,15 @@ python3.12 task14_agent_confirm_refund.py
 </copy>
 ```
 
-Expected output:
+Example agent response:
 
+```text
 Agent Response:
 
 To process your refund, could you please confirm your customer name and order number?
+```
 
-Create a new file named task14_agent_provide_refund_order_details.py
+Create a file named `task14_agent_provide_refund_order_details.py`.
 
 ```python
 <copy>
@@ -1620,7 +1737,7 @@ Run the script:
 
 ```bash
 <copy>
-export SELECT_AI_CONVERSATION_ID=<conversation_id>
+export SELECT_AI_CONVERSATION_ID='your_conversation_id'
 </copy>
 ```
 
@@ -1630,13 +1747,15 @@ python3.12 task14_agent_provide_refund_order_details.py
 </copy>
 ```
 
-Expected output:
+Example agent response:
 
+```text
 Agent Response:
 
 Thank you. To generate your refund confirmation email, what is the name of the item from order 7635? Also, please confirm the reason for return is 'arrived too late'.
+```
 
-Create a new file named task14_agent_confirm_refund_details.py
+Create a file named `task14_agent_confirm_refund_details.py`.
 
 ```python
 <copy>
@@ -1683,7 +1802,7 @@ Run the script:
 
 ```bash
 <copy>
-export SELECT_AI_CONVERSATION_ID=<conversation_id>
+export SELECT_AI_CONVERSATION_ID='your_conversation_id'
 </copy>
 ```
 
@@ -1693,8 +1812,9 @@ python3.12 task14_agent_confirm_refund_details.py
 </copy>
 ```
 
-Expected output:
+Example agent response:
 
+```text
 Agent Response:
 
 Here is the confirmation email for your refund:
@@ -1716,6 +1836,7 @@ A full refund will be issued to the credit card on file. Please allow 7-10 busin
 Please let me know if you have any questions or if there is anything else I can assist you with.
 
 Thank you, and have a great day!
+```
 
 ## Learn More
 

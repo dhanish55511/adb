@@ -7,7 +7,9 @@ This workshop guides you through setting up an Autonomous AI Database Serverless
 
 By combining Autonomous AI Database Serverlessand the Select AI Agent Framework using Python, this workshop demonstrates how developers can build intelligent, AI-powered solutions that use natural-language requests, coordinate specialized agents, invoke database tools, and deliver context-aware responses.
 
-## Objectives
+Estimated Time: 30 minutes
+
+### Objectives
 
 In this lab, you will:
 

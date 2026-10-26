@@ -14,7 +14,7 @@
         {
             "title": "Get Started",
             "description": "Sign in to Oracle Cloud Infrastructure",
-            "filename": "../../get-started/get-started.md"
+            "filename": "https://oracle-livelabs.github.io/common/labs/cloud-login/cloud-login.md"
         },
         {
             "title": "Lab 1: Set up Your Workshop Environment",

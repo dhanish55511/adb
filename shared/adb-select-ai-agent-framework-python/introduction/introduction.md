@@ -20,55 +20,9 @@ You will learn how to use a sequential team for predictable, fixed-order process
 
 By the end of this workshop, you will understand how to use Select AI Agent Framework for Python to build agentic workflows that interact with Autonomous AI Database data and services.
 
-## Concepts of Select AI Agent Framework for Python
+Estimated Time: 1 hour 30 minutes
 
-Select AI Agent Framework is Oracle AI Database’s capability for creating and managing interactive and autonomous AI agents. Agents can reason about user requests, plan a sequence of actions, call approved tools, reflect on tool results, and maintain conversational context.
-
-Before you begin, review these key concepts:
-
-Select AI Agent Framework for Python: A Python interface that enables applications to create and run Select AI agents using the select_ai.agent module.
-
-Connection: Establishes access from Python to Oracle Database using a standalone connection or connection pool.
-
-Provider: Defines the AI service, model, endpoint, region, and provider-specific settings used by Select AI.
-
-Credential: Stores the authentication details required to access the selected AI provider.
-
-Profile: Combines the provider, credential, database object scope, and generation settings into a reusable Select AI configuration.
-
-Tool: Defines an action that an agent can perform. Tools can use built-in capabilities such as natural-language-to-SQL, RAG, web search, and notifications, or can call PL/SQL procedures and custom functions.
-
-Task: Defines the instructions, objectives, and tools that an agent uses to complete a specific piece of work.
-
-Agent: Represents an AI worker with a defined role, instructions, AI profile, and access to selected tools.
-
-Team: Combines agents and tasks into an executable workflow. A team can coordinate one or more agents using sequential or supervisor-based patterns.
-
-Agent execution: The process in which an agent interprets a request, plans actions, calls tools, evaluates results, and generates a response.
-
-Reflection: Enables the agent to evaluate tool results and revise its plan when additional actions or clarification are required.
-
-Conversation memory: Maintains context from previous prompts, tool calls, and responses so that follow-up questions can refer to earlier interactions.
-
-Sequential workflow pattern: A fixed workflow in which agent-task pairs run in a configured order and pass results between dependent tasks.
-
-Supervisor agent pattern: A dynamic workflow in which a supervisor agent selects and coordinates specialized worker agents at run time.
-
-Worker agent: A specialized agent that performs a delegated task in a supervisor-led team.
-
-Task dependency: A relationship that allows a downstream task in a sequential workflow to receive the result of an upstream task.
-
-Self-contained subtask: A complete request sent by a supervisor to a worker agent. It includes the context and instructions the worker needs because the worker does not automatically inherit the supervisor’s full conversation.
-
-Synchronous and asynchronous APIs: The framework supports standard Python execution and asynchronous workflows using async and await.
-
-Command Line Interface: Provides an optional terminal-based workflow for testing Select AI profiles, agent objects, prompts, and team interactions.
-
-## Estimated Time
-
-1 hour 30 minutes
-
-## Objectives
+### Objectives
 
 In this workshop, you will:
 
@@ -125,6 +79,51 @@ In this workshop, you will:
 - Build a foundation for developing AI-powered database applications with Python.
 
 You may now proceed to the next lab.
+
+## Concepts of Select AI Agent Framework for Python
+
+Select AI Agent Framework is Oracle AI Database’s capability for creating and managing interactive and autonomous AI agents. Agents can reason about user requests, plan a sequence of actions, call approved tools, reflect on tool results, and maintain conversational context.
+
+Before you begin, review these key concepts:
+
+**Select AI Agent Framework for Python**: A Python interface that enables applications to create and run Select AI agents using the select_ai.agent module.
+
+**Connection**: Establishes access from Python to Oracle Database using a standalone connection or connection pool.
+
+**Provider**: Defines the AI service, model, endpoint, region, and provider-specific settings used by Select AI.
+
+**Credential**: Stores the authentication details required to access the selected AI provider.
+
+**Profile**: Combines the provider, credential, database object scope, and generation settings into a reusable Select AI configuration.
+
+**Tool**: Defines an action that an agent can perform. Tools can use built-in capabilities such as natural-language-to-SQL, RAG, web search, and notifications, or can call PL/SQL procedures and custom functions.
+
+**Task**: Defines the instructions, objectives, and tools that an agent uses to complete a specific piece of work.
+
+**Agent**: Represents an AI worker with a defined role, instructions, AI profile, and access to selected tools.
+
+**Team**: Combines agents and tasks into an executable workflow. A team can coordinate one or more agents using sequential or supervisor-based patterns.
+
+**Agent execution**: The process in which an agent interprets a request, plans actions, calls tools, evaluates results, and generates a response.
+
+**Reflection**: Enables the agent to evaluate tool results and revise its plan when additional actions or clarification are required.
+
+**Conversation memory**: Maintains context from previous prompts, tool calls, and responses so that follow-up questions can refer to earlier interactions.
+
+**Sequential workflow pattern**: A fixed workflow in which agent-task pairs run in a configured order and pass results between dependent tasks.
+
+**Supervisor agent pattern**: A dynamic workflow in which a supervisor agent selects and coordinates specialized worker agents at run time.
+
+**Worker agent**: A specialized agent that performs a delegated task in a supervisor-led team.
+
+**Task dependency**: A relationship that allows a downstream task in a sequential workflow to receive the result of an upstream task.
+
+**Self-contained subtask**: A complete request sent by a supervisor to a worker agent. It includes the context and instructions the worker needs because the worker does not automatically inherit the supervisor’s full conversation.
+
+**Synchronous and asynchronous APIs**: The framework supports standard Python execution and asynchronous workflows using async and await.
+
+**Command Line Interface**: Provides an optional terminal-based workflow for testing Select AI profiles, agent objects, prompts, and team interactions.
+
 
 ## Learn More
 

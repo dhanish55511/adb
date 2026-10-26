@@ -6,7 +6,7 @@ This lab focuses on creating sample database tables and loading sales and return
 
 Estimated Time: 15 minutes
 
-## Objectives
+### Objectives
 
 In this lab, you will:
 
@@ -24,9 +24,9 @@ Create the following tables for the workshop:
 
 - CUSTOMERS stores customer profile and contact details, including name, email address, phone number, state, and ZIP code.
 
-- CUSTOMER_ORDER_STATUS stores customer order details, including order number, product name, and the current order or return status.
+- `CUSTOMER_ORDER_STATUS` stores customer order details, including order number, product name, and the current order or return status.
 
-Log in to Oracle Autonomous AI Database as ADB_USER, then run the following SQL statements.
+Log in to Oracle Autonomous AI Database as `ADB_USER`, then run the following SQL statements.
 
 ```sql
 <copy>
