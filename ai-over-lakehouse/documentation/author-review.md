@@ -46,20 +46,26 @@ participant to create, edit, or validate an AI profile.
   the OS-specific 01 setup script; participants do not switch to ADMIN.
 - [ ] `PEAKGEAR_USER` can sign in using Environment Details → Database Password,
   not the OCI Login Credentials password or a sample password.
-- [ ] View Login Info → Environment Details contains Azure Storage Password,
-  Databricks Client ID, and Databricks Client Secret. A learner can copy the
-  current replacement values without GitHub or a separate credential message.
-- [ ] Data Studio UI creates the Azure credential and Unity/Iceberg mount.
-- [ ] Lab 2's SQL note is explicitly reference-only, not a required learner
-  step. In a separate test reservation, validate the reference with private
-  View Login Info values and the Task 1 Azure credential. Confirm the same
-  two Iceberg tables and Task 3 sample reads. Test missing placeholders, a
-  missing Azure credential, and an existing mount: each must stop before any
-  credential replacement. Preserve the exact error if mounting fails after
-  credential creation; inspect existing objects before retrying.
-- [ ] The catalog form explicitly selects both credentials before Add; expanding
-  the connected catalog exposes tables without a mandatory extra refresh.
+- [ ] Both source credentials are already provisioned for PEAKGEAR_USER:
+  DBX_PEAKGEAR_OAUTH and ADLS_PEAKGEAR_DATA. They appear in Credentials and in
+  the catalog form. Learners do not create them or enter source secrets.
+- [ ] Data Studio UI mounts Unity/Iceberg using the saved credentials.
+- [ ] Lab 2's SQL note remains reference-only. In a separate test reservation,
+  validate a successful mount and both Iceberg sample reads. Test a wrong user,
+  each missing credential, and an existing mount. Credential checks must run
+  before mounting; an existing mount remains intact. Neither SQL reference
+  creates, replaces, refreshes, or deletes credentials. After a timeout,
+  inspect Data > Database before retrying.
+- [ ] Data > Database > Add > Iceberg Catalog matches the current navigation.
+  The form's default name/type are replaced with DBX_UNITY_PEAKGEAR and Unity.
+  Both provisioned credentials are selected before Test, then Add. Test success
+  is described as catalog metadata access only; sample SELECTs prove file access.
+  Expanding the connected catalog exposes tables without a mandatory extra refresh.
 - [ ] Save separate, named live-source-check and local-snapshot worksheets.
+  Follow Worksheets > three-dot menu > Rename, then the Save disk icon. Each
+  gutter Run SQL triangle executes its own statement; wait for its result.
+  Confirm all three snapshot names in SQL Worksheet > Data Explorer > Database
+  > PEAKGEAR_USER > Tables, and confirm sample rows in Data > Database.
   Explain live federation versus optional local copies for performance/enrichment.
 - [ ] `PRODUCTS` and `DIGITAL_CLICKSTREAM_EVENTS` return real rows.
 - [ ] Lab 2 reads up to five rows from each remote source before local raw-table
@@ -73,7 +79,8 @@ participant to create, edit, or validate an AI profile.
 - [ ] The raw question receives an appropriately cautious answer.
 - [ ] Lab 4 saves reviewed descriptions and tags for all three raw tables,
   including the product-name and join-key column definitions; the metadata is
-  visible in Catalog.
+  visible in Data > Database > table > Overview. Older Lab 4 screenshots are
+  explicitly labelled as using the earlier Catalog navigation.
 - [ ] Useful generated descriptions/tags remain. Only incorrect or missing
   business rules are edited; arbitrary tag-name equality or 28 annotation rows
   are not pass criteria. Verify the simple ranking and AV workflow with these
@@ -126,22 +133,23 @@ participant to create, edit, or validate an AI profile.
   and enriched-answer captures.
 * Local tables are snapshots; a new reservation dry run must validate the
   one-time copy duration, quota, and product-key uniqueness before analytics.
-* The exact current Data Studio labels for Azure credential and Unity mount UI
-  require capture before those steps are published.
+* The current Data Studio labels for selecting provisioned credentials and
+  mounting Unity must match the learner instructions.
 * Verify that `adp_run_query` can execute the required explicit SQL DDL as
   PEAKGEAR_USER in the target event release. The Lab 5 workflow does not use
   the high-level Analytic View builder.
 * Do not publish passwords, SAS tokens, concrete Databricks client IDs, client
   secrets, or private keys in text, SQL, screenshots, or the Starter Kit ZIP.
   Run the offline credential regression checks before publishing.
-* Verify View Login Info exposes all three Lab 2 protected fields. The backend
-  update is external to this PR. Service owners must revoke/rotate previously
-  exposed credentials and audit access; a new reservation must then complete
-  Lab 2 with the replacement values. Removing files does not purge Git history.
+* Verify both source credentials are provisioned for PEAKGEAR_USER and selectable
+  in the catalog form; learners must not need source secrets from View Login Info.
+  Service owners must revoke/rotate previously exposed credentials and audit
+  access; a new reservation must complete Lab 2 using the prepared credentials.
+  Removing files does not purge Git history.
 * Participant database passwords come only from the active LiveLabs reservation.
   The legacy provider SQL is not a learner step or a source of the live password.
 
 ## Acknowledgements
 
 * **Author** - Oracle AI Lakehouse workshop team
-* **Last Updated By/Date** - Oracle AI Lakehouse workshop team, October 2026
+* **Last Updated By/Date** - Oracle AI Lakehouse workshop team, November 2026
